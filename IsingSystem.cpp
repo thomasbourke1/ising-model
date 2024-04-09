@@ -273,7 +273,7 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	}	
 }
 
-// ends automation if endSweeps is reached
+// ends automation if endRuns is reached
 void IsingSystem::keepGoing() {
 	
 	if (numSweeps == 0)
@@ -294,7 +294,6 @@ void IsingSystem::keepGoing() {
 		//increment seed, numRuns counter 
 		seed++;
 		numRuns++;
-		//numSweeps = 0;
 		Reset();
 	}
 	else {
