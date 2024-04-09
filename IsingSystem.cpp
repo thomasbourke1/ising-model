@@ -25,7 +25,8 @@ IsingSystem::IsingSystem(Window *set_win) {
 	isActive = 0;
 	endSweeps = 10;
 	seed = getSeed();
-	endRuns = 1;
+	numRuns = 1;
+	endRuns = 100;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -277,19 +278,18 @@ void IsingSystem::keepGoing() {
 		//create new file
 		csvHeaders("sweeps", "magnetisation", seed);
 		fileName = getFileName("sweeps", "magnetisation", seed);
-		cout << "initial file name = " << fileName << endl;
 	}
-	if (numSweeps < endSweeps)
+	if (numSweeps <= endSweeps)
 	{
 		fileName = getFileName("sweeps", "magnetisation", seed);
-		cout << "file name = " << fileName << endl;
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
 	}
 	else if (numRuns < endRuns)
 	{
-		seed += 1;
+		seed++;
+		numRuns++;
 		numSweeps = 0;
 	}
 	else {
