@@ -22,6 +22,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 10;
+	seed = 6;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -216,23 +217,29 @@ void IsingSystem::setPosNeighbour(int setpos[], int pos[], int val) {
 	}
 }
 
+int IsingSystem::getSeed() {
+	int seed = 6;
+	return seed;
+}
+
 void IsingSystem::calcVars(int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if ((numSweeps % 1) == 0)
 	{
 		M = magnetisation();
-		printCsv(numSweeps, M);
+		seed = getSeed();
+		printCsv(numSweeps, M, seed);
 	}	
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(double indVar, double depVar) {
+void IsingSystem::printCsv(double indVar, double depVar, int seed) {
 	//open csv
 	std::ofstream logfile("magnetisation.csv", std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
-		logfile << indVar << "," << depVar << std::endl;
+		logfile << indVar << "," << depVar << "," << seed << std::endl;
 		logfile.close();
 	}
 	else {
@@ -254,15 +261,12 @@ void IsingSystem::keepGoing() {
 		cout << "Simulation ended" << endl;
 		pauseRunning();
 		// wait 500ms for any redrawing etc to finish, then quit
-	}
-	
+	}	
 }
 
 // this is the update function which at the moment just does one mc sweep
 void IsingSystem::Update() {
-//	MCsweep();
-//	numSweeps++;
-//	calcVars(numSweeps);
+	//keeps going if endSweeps not yet reached
 	keepGoing();
 }
 

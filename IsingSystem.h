@@ -105,12 +105,14 @@ public:
 	int numSweeps = 0;
 
 	// saves data to file (independant and dependant variables)
-	void printCsv(double indVar, double depVar);
+	void printCsv(double indVar, double depVar, int seed);
 
 	// for when we want to automate system
 	void keepGoing();
 	int endSweeps;
 	
+	int getSeed();
+	int seed;
 
 	// setSeed function for setting seed based on current time
 };
