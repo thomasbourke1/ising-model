@@ -41,6 +41,8 @@ int main(int argc, char **argv) {
 	//sys->endSweeps = 10;
 	drawFuncs::introMessage();
 
+	//create data file
+
 	// tell openGL how to redraw the screen and respond to the keyboard
 	glutDisplayFunc(drawFuncs::display);
 	glutKeyboardFunc(drawFuncs::handleKeypress);

@@ -10,6 +10,8 @@
 #include <random>
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <string>
 
 #include "Window.h"
 #include "rnd.h"
@@ -101,15 +103,25 @@ public:
 	int numSpins(int gridSize);
 	int N;
 
-	void calcVars(int numSweeps);
+	void calcVars(std::string filename, int numSweeps);
 	int numSweeps = 0;
 
 	// saves data to file (independant and dependant variables)
-	void printCsv(double indVar, double depVar, int seed);
+	void printCsv(std::string filename, double indVar, double depVar, int seed);
+	//creates csv file
+	void csvHeaders(std::string indVar, std::string depVar, int seed);
+	int fileCreated;
+
+	// get file name
+	std::string getFileName(std::string indVar, std::string depVar, int seed);
+	std::string fileName;
 
 	// for when we want to automate system
 	void keepGoing();
 	int endSweeps;
+	int numRuns;
+	int endRuns;
+
 	
 	int getSeed();
 	int seed;

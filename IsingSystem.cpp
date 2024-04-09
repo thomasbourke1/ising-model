@@ -3,6 +3,8 @@
 //
 
 #include "IsingSystem.h"
+#include <fstream>
+#include <string>
 
 // colors
 namespace colours {
@@ -23,6 +25,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	isActive = 0;
 	endSweeps = 10;
 	seed = 6;
+	endRuns = 1;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -218,24 +221,35 @@ void IsingSystem::setPosNeighbour(int setpos[], int pos[], int val) {
 }
 
 int IsingSystem::getSeed() {
-	int seed = 6;
+	int seed = 0;
 	return seed;
 }
 
-void IsingSystem::calcVars(int numSweeps) {
-	//calculate magnetisation and energy after 10 sweeps
-	if ((numSweeps % 1) == 0)
-	{
-		M = magnetisation();
-		seed = getSeed();
-		printCsv(numSweeps, M, seed);
-	}	
+// gets file name of csv file
+std::string IsingSystem::getFileName(std::string indVar, std::string depVar, int seed) {
+	// sets seed to string data type	
+	std::string seedAsString = std::to_string(seed);
+	//creates filename based on inputs
+	std::string filename = "data/file_" + depVar + seedAsString + ".csv";
+	return filename;
+}
+
+// creates csv file with dependant variable and seed as name
+void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
+	//sets filename
+	std::string filename = getFileName(indVar, depVar, seed);
+	//creates file with filename
+	std::ofstream file(filename);
+	//labels columns of filename
+	file << indVar << "," << depVar << "," << "seed" << endl;
+    // Close the file
+    file.close();
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(double indVar, double depVar, int seed) {
+void IsingSystem::printCsv(std::string filename, double indVar, double depVar, int seed) {
 	//open csv
-	std::ofstream logfile("magnetisation.csv", std::ios_base::app);
+	std::ofstream logfile("filename", std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
@@ -248,19 +262,39 @@ void IsingSystem::printCsv(double indVar, double depVar, int seed) {
 	}
 }
 
+void IsingSystem::calcVars(std::string filename, int numSweeps) {
+	//calculate magnetisation and energy after 10 sweeps
+	if ((numSweeps % 1) == 0)
+	{
+		M = magnetisation();
+		seed = getSeed();
+		printCsv(filename, numSweeps, M, seed);
+	}	
+}
+
 // ends automation if endSweeps is reached
 void IsingSystem::keepGoing() {
+	
+	if (numSweeps == 0)
+	{
+		//create new file
+		csvHeaders("sweeps", "magnetisation", seed);
+		fileName = getFileName("sweeps", "magnetisation", seed);
+	}
 	if (numSweeps < endSweeps)
 	{
-		// does normal program stuff
+		fileName = getFileName("sweeps", "magnetisation", seed);
+		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
-		calcVars(numSweeps);
+	}
+	else if (numRuns < endRuns)
+	{
+		seed += 1;
+		numSweeps = 0;
 	}
 	else {
-		cout << "Simulation ended" << endl;
 		pauseRunning();
-		// wait 500ms for any redrawing etc to finish, then quit
 	}	
 }
 
