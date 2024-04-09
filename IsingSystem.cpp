@@ -45,6 +45,9 @@ IsingSystem::IsingSystem(Window *set_win) {
 void IsingSystem::Reset() {
 
 	double initialTemp = 4.0;
+	
+	//resets number of sweeps
+	numSweeps = 0;
 
 	setTemperature(initialTemp);
 
@@ -288,12 +291,15 @@ void IsingSystem::keepGoing() {
 	}
 	else if (numRuns < endRuns)
 	{
+		//increment seed, numRuns counter 
 		seed++;
 		numRuns++;
-		numSweeps = 0;
+		//numSweeps = 0;
+		Reset();
 	}
 	else {
 		pauseRunning();
+		cout << "End number of runs reached" << endl;
 	}	
 }
 
