@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
 	sys = new IsingSystem(win);
 
 	// this is the seed for the random numbers
-	//int seed = 6;
-	int seed = sys->getSeed();
+	int seed = 0;
+	//int seed = sys->getSeed();
 	cout << "setting seed " << seed << endl;
 	//cout << "setting seed " << sys->getSeed() << endl;
 	sys->setSeed(seed);

@@ -24,7 +24,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 10;
-	seed = 6;
+	seed = getSeed();
 	endRuns = 1;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
@@ -192,10 +192,8 @@ double IsingSystem::magnetisation() {
 	}
 	// divide by N spins
 	M = M / N;
-	cout << "Magnetisation M = " << M << endl;
 	return M;
 }
-
 
 // send back the position of a neighbour of a given grid cell
 // NOTE: we take care of periodic boundary conditions, also positions are integers now not doubles
@@ -221,7 +219,6 @@ void IsingSystem::setPosNeighbour(int setpos[], int pos[], int val) {
 }
 
 int IsingSystem::getSeed() {
-	int seed = 0;
 	return seed;
 }
 
@@ -280,10 +277,12 @@ void IsingSystem::keepGoing() {
 		//create new file
 		csvHeaders("sweeps", "magnetisation", seed);
 		fileName = getFileName("sweeps", "magnetisation", seed);
+		cout << "initial file name = " << fileName << endl;
 	}
 	if (numSweeps < endSweeps)
 	{
 		fileName = getFileName("sweeps", "magnetisation", seed);
+		cout << "file name = " << fileName << endl;
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
