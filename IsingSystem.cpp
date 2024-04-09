@@ -158,9 +158,26 @@ int IsingSystem::readGrid(int pos[]) {
 	return grid[pos[0]][pos[1]];
 }
 
-// read the grid cell for a given position
+// flips spin of grid cell for a given position
 void IsingSystem::flipSpin(int pos[]) {
 	grid[pos[0]][pos[1]] = -grid[pos[0]][pos[1]];
+}
+
+// calculates magnetisation of whole grid
+double IsingSystem::magnetisation() {
+	//need to sum over rows and columns
+	for (int i = 0; i < gridSize; i++)
+	{
+		for (int j = 0; j < gridSize; j++)
+		{
+			// position is (i,j)
+			int pos[2] = { i,j };
+			//divide by N = gridsize**2
+			dM = (readGrid(pos) / gridSize*gridSize);
+			M += dM;
+		}	
+	}
+	cout << "Magnetisation M = " << M << endl;
 }
 
 

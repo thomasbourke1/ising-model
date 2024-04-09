@@ -91,5 +91,10 @@ public:
 
 	// draws the system as squares
 	void DrawSquares();
+
+	// calculates magnetisation of system
+	double magnetisation();
+	int M = 0;
+	int dM;
 };
 
