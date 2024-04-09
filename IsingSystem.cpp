@@ -246,7 +246,7 @@ void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
 // prints data to csv file
 void IsingSystem::printCsv(std::string filename, double indVar, double depVar, int seed) {
 	//open csv
-	std::ofstream logfile("filename", std::ios_base::app);
+	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
