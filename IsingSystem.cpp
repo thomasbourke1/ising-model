@@ -189,7 +189,7 @@ double IsingSystem::magnetisation() {
 	// divide by N spins
 	M = M / N;
 	cout << "Magnetisation M = " << M << endl;
-	//return M;
+	return M;
 }
 
 
@@ -220,18 +220,31 @@ void IsingSystem::calcVars(int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if (numSweeps == 10)
 	{
-		magnetisation();
+		M = magnetisation();
+		printCsv(numSweeps, M);
+	}	
+}
+
+// prints data to csv file
+void IsingSystem::printCsv(double indVar, double depVar) {
+	//open csv
+	std::ofstream logfile("magnetisation.csv", std::ios_base::app);
+	//print data to file
+	if (logfile.is_open()) {
+		//write to file
+		logfile << indVar << "," << depVar << std::endl;
+		logfile.close();
 	}
-	//else {
-	//	cout << "numSweeps = " << numSweeps << endl;
-	//}
-	
+	else {
+		//couldn't open file for writing
+		std::cerr << "Error: Unable to open the file for writing." << std::endl;
+	}
 }
 
 // this is the update function which at the moment just does one mc sweep
 void IsingSystem::Update() {
 	MCsweep();
 	numSweeps++;
-	cout << "numSweeps = " << numSweeps << endl;
+	calcVars(numSweeps);
 }
 

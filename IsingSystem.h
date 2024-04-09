@@ -102,8 +102,9 @@ public:
 	int N;
 
 	void calcVars(int numSweeps);
-
 	int numSweeps = 0;
-	int *ptr_numSweeps;
+
+	// saves data to file (independant and dependant variables)
+	void printCsv(double indVar, double depVar);
 };
 
