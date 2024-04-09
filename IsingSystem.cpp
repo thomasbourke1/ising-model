@@ -21,7 +21,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	inverseTemperatureBeta = 1 / 4.0;
 	slowNotFast = 1;
 	isActive = 0;
-	//numSweeps = 0;
+	endSweeps = 10;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -218,7 +218,7 @@ void IsingSystem::setPosNeighbour(int setpos[], int pos[], int val) {
 
 void IsingSystem::calcVars(int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
-	if (numSweeps == 10)
+	if ((numSweeps % 1) == 0)
 	{
 		M = magnetisation();
 		printCsv(numSweeps, M);
@@ -241,10 +241,28 @@ void IsingSystem::printCsv(double indVar, double depVar) {
 	}
 }
 
+// ends automation if endSweeps is reached
+void IsingSystem::keepGoing() {
+	if (numSweeps < endSweeps)
+	{
+		// does normal program stuff
+		MCsweep();
+		numSweeps++;
+		calcVars(numSweeps);
+	}
+	else {
+		cout << "Simulation ended" << endl;
+		pauseRunning();
+		// wait 500ms for any redrawing etc to finish, then quit
+	}
+	
+}
+
 // this is the update function which at the moment just does one mc sweep
 void IsingSystem::Update() {
-	MCsweep();
-	numSweeps++;
-	calcVars(numSweeps);
+//	MCsweep();
+//	numSweeps++;
+//	calcVars(numSweeps);
+	keepGoing();
 }
 

@@ -106,5 +106,12 @@ public:
 
 	// saves data to file (independant and dependant variables)
 	void printCsv(double indVar, double depVar);
+
+	// for when we want to automate system
+	void keepGoing();
+	int endSweeps;
+	
+
+	// setSeed function for setting seed based on current time
 };
 
