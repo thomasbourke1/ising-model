@@ -163,9 +163,17 @@ void IsingSystem::flipSpin(int pos[]) {
 	grid[pos[0]][pos[1]] = -grid[pos[0]][pos[1]];
 }
 
+//calculates number of spins 
+int IsingSystem::numSpins(int gridSize) {
+	return gridSize*gridSize;
+}
+
 // calculates magnetisation of whole grid
 double IsingSystem::magnetisation() {
-	//need to sum over rows and columns
+	// reset M
+	M = 0;
+	N = numSpins(gridSize);
+	// need to sum over rows and columns
 	for (int i = 0; i < gridSize; i++)
 	{
 		for (int j = 0; j < gridSize; j++)
@@ -173,11 +181,14 @@ double IsingSystem::magnetisation() {
 			// position is (i,j)
 			int pos[2] = { i,j };
 			//divide by N = gridsize**2
-			dM = (readGrid(pos) / gridSize*gridSize);
+			dM = (readGrid(pos));  //gridSize*gridSize);
 			M += dM;
 		}	
 	}
+	// divide by N spins
+	M = M / N;
 	cout << "Magnetisation M = " << M << endl;
+	//return M;
 }
 
 

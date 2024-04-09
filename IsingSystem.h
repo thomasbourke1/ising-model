@@ -94,7 +94,11 @@ public:
 
 	// calculates magnetisation of system
 	double magnetisation();
-	int M = 0;
+	double M;
 	int dM;
+
+	// number of spins N in grid
+	int numSpins(int gridSize);
+	int N;
 };
 
