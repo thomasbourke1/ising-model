@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
 	cout << "setting seed " << seed << endl;
 	sys->setSeed(seed);
 
+	sys->numSweeps = 0;
 	drawFuncs::introMessage();
 
 	// tell openGL how to redraw the screen and respond to the keyboard

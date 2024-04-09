@@ -100,5 +100,10 @@ public:
 	// number of spins N in grid
 	int numSpins(int gridSize);
 	int N;
+
+	void calcVars(int numSweeps);
+
+	int numSweeps = 0;
+	int *ptr_numSweeps;
 };
 

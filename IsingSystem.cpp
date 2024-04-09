@@ -21,6 +21,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	inverseTemperatureBeta = 1 / 4.0;
 	slowNotFast = 1;
 	isActive = 0;
+	//numSweeps = 0;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -181,7 +182,7 @@ double IsingSystem::magnetisation() {
 			// position is (i,j)
 			int pos[2] = { i,j };
 			//divide by N = gridsize**2
-			dM = (readGrid(pos));  //gridSize*gridSize);
+			dM = (readGrid(pos));
 			M += dM;
 		}	
 	}
@@ -215,8 +216,22 @@ void IsingSystem::setPosNeighbour(int setpos[], int pos[], int val) {
 	}
 }
 
+void IsingSystem::calcVars(int numSweeps) {
+	//calculate magnetisation and energy after 10 sweeps
+	if (numSweeps == 10)
+	{
+		magnetisation();
+	}
+	//else {
+	//	cout << "numSweeps = " << numSweeps << endl;
+	//}
+	
+}
+
 // this is the update function which at the moment just does one mc sweep
 void IsingSystem::Update() {
 	MCsweep();
+	numSweeps++;
+	cout << "numSweeps = " << numSweeps << endl;
 }
 
