@@ -23,7 +23,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	inverseTemperatureBeta = 1 / 4.0;
 	slowNotFast = 1;
 	isActive = 0;
-	endSweeps = 10;
+	endSweeps = 20;
 	seed = getSeed();
 	numRuns = 1;
 	endRuns = 100;
@@ -57,7 +57,7 @@ void IsingSystem::Reset() {
 			// position is (i,j)
 			int pos[2] = { i,j };
 			// set this spin to state -1
-			setGrid(pos, -1);
+			setGrid(pos, +1);
 		}
 	}
 }
