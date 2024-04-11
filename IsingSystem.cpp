@@ -237,7 +237,7 @@ std::string IsingSystem::getFileName(std::string indVar, std::string depVar) {
 }
 
 // creates csv file with dependant variable and seed as name
-void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
+void IsingSystem::csvHeaders(std::string indVar, std::string depVar) {
 	//sets filename
 	std::string filename = getFileName(indVar, depVar);
 	//creates file with filename
@@ -264,7 +264,7 @@ void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, 
 	}
 }
 
-// opens filename, appends numSweeps, beta, mag, seed
+// opens filename, calls printCsv to append numSweeps, beta, mag, seed
 void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if ((numSweeps % 1) == 0)
@@ -278,22 +278,23 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 // ends automation if endRuns is reached
 void IsingSystem::keepGoing() {
 	
-	if (numSweeps == 0)
+	// create file if numRuns = 1 [starts from 1]
+	if (numRuns == 1)
 	{
-		//create new file
-		csvHeaders("sweeps", "magnetisation", seed);
+		csvHeaders("sweeps", "magnetisation");
 		fileName = getFileName("sweeps", "magnetisation");
 	}
+
+	// adds values to file if endSweeps not yet reached
 	if (numSweeps <= endSweeps)
 	{
-		fileName = getFileName("sweeps", "magnetisation");
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
 	}
 	else if (numRuns < endRuns)
 	{
-		//increment seed, numRuns counter 
+		//increment seed, numRuns counter, reset simulation
 		seed++;
 		numRuns++;
 		Reset();

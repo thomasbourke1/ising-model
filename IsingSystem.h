@@ -114,7 +114,7 @@ public:
 	std::string fileName;
 
 	// creates csv file
-	void csvHeaders(std::string indVar, std::string depVar, int seed);
+	void csvHeaders(std::string indVar, std::string depVar);
 
 	// saves data to file (independant and dependant variables)
 	void printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed);
