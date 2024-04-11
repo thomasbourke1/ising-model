@@ -26,8 +26,10 @@ IsingSystem::IsingSystem(Window *set_win) {
 	isActive = 0;
 	endSweeps = 20;
 	seed = getSeed();
+	seed = 0;
 	numRuns = 1;
-	endRuns = 100;
+	endRuns = 10;
+	endBeta = 0.7;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -45,7 +47,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 
 void IsingSystem::Reset() {
 
-	double initialTemp = 4.0;
+	double initialTemp = 5.0;
 	
 	//resets number of sweeps
 	numSweeps = 0;
@@ -292,7 +294,7 @@ void IsingSystem::keepGoing() {
 		MCsweep();
 		numSweeps++;
 	}
-	else if (numRuns < endRuns)
+	else if (numRuns < endRuns && inverseTemperatureBeta)
 	{
 		//increment seed, numRuns counter, reset simulation
 		seed++;

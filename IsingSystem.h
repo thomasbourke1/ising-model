@@ -106,9 +106,6 @@ public:
 	void calcVars(std::string filename, int numSweeps);
 	int numSweeps = 0;
 
-	// temperature
-	int beta;
-
 	// get file name
 	std::string getFileName(std::string indVar, std::string depVar);
 	std::string fileName;
@@ -125,6 +122,7 @@ public:
 	int endSweeps;
 	int numRuns;
 	int endRuns;
+	int endBeta;
 
 	
 	int getSeed();
