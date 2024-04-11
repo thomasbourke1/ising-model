@@ -231,7 +231,7 @@ std::string IsingSystem::getFileName(std::string indVar, std::string depVar, int
 	// sets seed to string data type	
 	std::string seedAsString = std::to_string(seed);
 	//creates filename based on inputs
-	std::string filename = "data/file_" + depVar + seedAsString + ".csv";
+	std::string filename = "analysis/task1_2_data/file_" + depVar + seedAsString + ".csv";
 	return filename;
 }
 
@@ -242,19 +242,19 @@ void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
 	//creates file with filename
 	std::ofstream file(filename);
 	//labels columns of filename
-	file << indVar << "," << depVar << "," << "seed" << endl;
+	file << indVar << "," << "beta" << "," << depVar << "," << "seed" << endl;
     // Close the file
     file.close();
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(std::string filename, double indVar, double depVar, int seed) {
+void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed) {
 	//open csv
 	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
-		logfile << indVar << "," << depVar << "," << seed << std::endl;
+		logfile << indVar << "," << indVar2 << "," << depVar << "," << seed << std::endl;
 		logfile.close();
 	}
 	else {
@@ -269,7 +269,7 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	{
 		M = magnetisation();
 		seed = getSeed();
-		printCsv(filename, numSweeps, M, seed);
+		printCsv(filename, numSweeps, inverseTemperatureBeta, M, seed);
 	}	
 }
 
