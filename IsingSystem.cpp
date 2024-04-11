@@ -21,15 +21,18 @@ IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
 
-	inverseTemperatureBeta = 1 / 4.0;
+	inverseTemperatureBeta = 0.2;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 20;
 	seed = getSeed();
-	seed = 0;
 	numRuns = 1;
 	endRuns = 10;
-	endBeta = 0.7;
+	int endBeta = 6;
+
+	finalTemp = 0.7;
+
+	cout << "endBeta = " << endBeta << endl;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -47,7 +50,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 
 void IsingSystem::Reset() {
 
-	double initialTemp = 5.0;
+	double initialTemp = 0.2;
 	
 	//resets number of sweeps
 	numSweeps = 0;
@@ -273,33 +276,48 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	{
 		M = magnetisation();
 		seed = getSeed();
-		printCsv(filename, numSweeps, inverseTemperatureBeta, M, seed);
+		printCsv(filename, numSweeps, inverseTemperatureBeta, M, getSeed());
 	}	
 }
 
 // ends automation if endRuns is reached
 void IsingSystem::keepGoing() {
-	
 	// create file if numRuns = 1 [starts from 1]
-	if (numRuns == 1)
+	if (numRuns == 1 && numSweeps == 0)
 	{
+		cout << "File created" << endl;
 		csvHeaders("sweeps", "magnetisation");
 		fileName = getFileName("sweeps", "magnetisation");
-	}
 
+	//	cout << "debugging started" << endl;
+	//	cout << "numRuns = " << numRuns << endl;
+	//	cout << "numSweeps = " << numSweeps << endl;
+	//	cout << "inverseTemperatureBeta = " << inverseTemperatureBeta << " endBeta = " << endBeta << endl;
+
+	//	cout << "" << endl;
+	//	cout << "finalTemp = " << finalTemp << endl;
+	}
 	// adds values to file if endSweeps not yet reached
 	if (numSweeps <= endSweeps)
 	{
+		cout << "added to file" << endl;
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
+
+	//	cout << "endBeta = " << endBeta << endl;
 	}
-	else if (numRuns < endRuns && inverseTemperatureBeta)
+	if (numRuns <= endRuns && inverseTemperatureBeta <= finalTemp) //&& numSweeps == endSweeps) //inverseTemperatureBeta <= endBeta)
 	{
 		//increment seed, numRuns counter, reset simulation
+		cout << "incremented seed, numRuns" << endl;
 		seed++;
 		numRuns++;
 		Reset();
+		if (numSweeps == endSweeps)
+		{
+			inverseTemperatureBeta += 0.1;
+		}
 	}
 	else {
 		pauseRunning();

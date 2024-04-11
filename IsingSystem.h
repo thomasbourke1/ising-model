@@ -62,7 +62,7 @@ public:
 	void Hotter() { inverseTemperatureBeta -= 0.05; }
 	void Colder() { inverseTemperatureBeta += 0.05; }
 
-	void setTemperature(double TT) { inverseTemperatureBeta = 1.0 / TT; }
+	void setTemperature(double TT) {}// inverseTemperatureBeta = 1.0 / TT; }
 
 	// set and read grid entries associated with a given position
 	// NOTE! the grid is not accessed directly, only via these functions
@@ -123,6 +123,8 @@ public:
 	int numRuns;
 	int endRuns;
 	int endBeta;
+
+	double finalTemp;
 
 	
 	int getSeed();
