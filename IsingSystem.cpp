@@ -5,6 +5,7 @@
 #include "IsingSystem.h"
 #include <fstream>
 #include <string>
+#include <cmath>
 
 // colors
 namespace colours {
@@ -227,18 +228,18 @@ int IsingSystem::getSeed() {
 }
 
 // gets file name of csv file
-std::string IsingSystem::getFileName(std::string indVar, std::string depVar, int seed) {
+std::string IsingSystem::getFileName(std::string indVar, std::string depVar) {
 	// sets seed to string data type	
 	std::string seedAsString = std::to_string(seed);
 	//creates filename based on inputs
-	std::string filename = "analysis/task1_2_data/file_" + depVar + seedAsString + ".csv";
+	std::string filename = "analysis/task1_data/file_" + depVar + ".csv";
 	return filename;
 }
 
 // creates csv file with dependant variable and seed as name
 void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
 	//sets filename
-	std::string filename = getFileName(indVar, depVar, seed);
+	std::string filename = getFileName(indVar, depVar);
 	//creates file with filename
 	std::ofstream file(filename);
 	//labels columns of filename
@@ -263,6 +264,7 @@ void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, 
 	}
 }
 
+// opens filename, appends numSweeps, beta, mag, seed
 void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if ((numSweeps % 1) == 0)
@@ -280,11 +282,11 @@ void IsingSystem::keepGoing() {
 	{
 		//create new file
 		csvHeaders("sweeps", "magnetisation", seed);
-		fileName = getFileName("sweeps", "magnetisation", seed);
+		fileName = getFileName("sweeps", "magnetisation");
 	}
 	if (numSweeps <= endSweeps)
 	{
-		fileName = getFileName("sweeps", "magnetisation", seed);
+		fileName = getFileName("sweeps", "magnetisation");
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;

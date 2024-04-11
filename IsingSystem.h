@@ -106,15 +106,19 @@ public:
 	void calcVars(std::string filename, int numSweeps);
 	int numSweeps = 0;
 
-	// saves data to file (independant and dependant variables)
-	void printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed);
-	//creates csv file
-	void csvHeaders(std::string indVar, std::string depVar, int seed);
-	int fileCreated;
+	// temperature
+	int beta;
 
 	// get file name
-	std::string getFileName(std::string indVar, std::string depVar, int seed);
+	std::string getFileName(std::string indVar, std::string depVar);
 	std::string fileName;
+
+	// creates csv file
+	void csvHeaders(std::string indVar, std::string depVar, int seed);
+
+	// saves data to file (independant and dependant variables)
+	void printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed);
+	
 
 	// for when we want to automate system
 	void keepGoing();
