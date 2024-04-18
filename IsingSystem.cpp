@@ -240,7 +240,7 @@ std::string IsingSystem::getFileName(std::string indVar, std::string depVar, int
 	// sets seed to string data type	
 	std::string seedAsString = std::to_string(seed);
 	//creates filename based on inputs
-	std::string filename = "analysis/task1_2_data/file_" + depVar + seedAsString + ".csv";
+	std::string filename = "data/file_" + depVar + seedAsString + ".csv";
 	return filename;
 }
 
