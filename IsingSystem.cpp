@@ -178,25 +178,37 @@ int IsingSystem::numSpins(int gridSize) {
 }
 
 // calculates magnetisation of whole grid
-double IsingSystem::magnetisation() {
-	// reset M
-	M = 0;
-	N = numSpins(gridSize);
-	// need to sum over rows and columns
+float IsingSystem::getMagnetisation() {
+	float M = 0;
 	for (int i = 0; i < gridSize; i++)
 	{
 		for (int j = 0; j < gridSize; j++)
 		{
-			// position is (i,j)
-			int pos[2] = { i,j };
-			//divide by N = gridsize**2
-			dM = (readGrid(pos));
-			M += dM;
-		}	
+			M += grid[i][j];
+		}
 	}
-	// divide by N spins
-	M = M / N;
-	return M;
+	return (M / (gridSize*gridSize));
+}
+
+// gets Energy by summing product of nearest neighbours for each particle
+float IsingSystem::getEnergy() {
+	float E = 0;
+	int neighbour[2], current[2];
+	for (int i = 0; i < gridSize; i++) 
+	{
+		for (int j = 0; j < gridSize; j++)
+		{
+			current[0] = i;
+			current[j] = j;
+			// iterate over 4 nearest neighbours -> PBCs taken care of
+			for (int k = 0; i < 4; k++)
+			{
+				setPosNeighbour(neighbour, current, k);
+                E += grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+			}	
+		}
+	}
+	return (-E);
 }
 
 // send back the position of a neighbour of a given grid cell
@@ -248,7 +260,7 @@ void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed) {
+void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, double depVar, int seed) {
 	//open csv
 	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
@@ -267,7 +279,7 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if ((numSweeps % 1) == 0)
 	{
-		M = magnetisation();
+		float M = getMagnetisation();
 		seed = getSeed();
 		printCsv(filename, numSweeps, inverseTemperatureBeta, M, seed);
 	}	

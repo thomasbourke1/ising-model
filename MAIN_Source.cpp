@@ -127,7 +127,7 @@ void drawFuncs::handleKeypress(unsigned char key, int x, int y) {
 		drawFuncs::introMessage();
 		break;
 	case 'm':
-		cout << "magnetisation = " << sys->magnetisation() << endl;
+		cout << "magnetisation = " << sys->getMagnetisation() << endl;
 	}
 	glutPostRedisplay();
 }

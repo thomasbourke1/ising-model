@@ -95,9 +95,10 @@ public:
 	void DrawSquares();
 
 	// calculates magnetisation of system
-	double magnetisation();
-	double M;
-	int dM;
+	float getMagnetisation();
+
+	// calculates energy of system
+	float getEnergy();
 
 	// number of spins N in grid
 	int numSpins(int gridSize);
@@ -107,7 +108,7 @@ public:
 	int numSweeps = 0;
 
 	// saves data to file (independant and dependant variables)
-	void printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed);
+	void printCsv(std::string filename, float indVar, double indVar2, double depVar, int seed);
 	//creates csv file
 	void csvHeaders(std::string indVar, std::string depVar, int seed);
 	int fileCreated;
