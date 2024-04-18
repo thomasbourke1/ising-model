@@ -23,10 +23,10 @@ IsingSystem::IsingSystem(Window *set_win) {
 	inverseTemperatureBeta = 1 / 4.0;
 	slowNotFast = 1;
 	isActive = 0;
-	endSweeps = 20;
+	endSweeps = 10;
 	seed = getSeed();
 	numRuns = 1;
-	endRuns = 100;
+	endRuns = 10;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -236,16 +236,18 @@ int IsingSystem::getSeed() {
 }
 
 // gets file name of csv file
-std::string IsingSystem::getFileName(std::string indVar, std::string depVar, int seed) {
+std::string IsingSystem::getFileName(std::string indVar, double depVar, int seed) {
 	// sets seed to string data type	
 	std::string seedAsString = std::to_string(seed);
+	std::string betaAsString = std::to_string(depVar);
+
 	//creates filename based on inputs
-	std::string filename = "data/file_" + depVar + seedAsString + ".csv";
+	std::string filename = "data/file_" + betaAsString + "_" + seedAsString + ".csv";
 	return filename;
 }
 
 // creates csv file with dependant variable and seed as name
-void IsingSystem::csvHeaders(std::string indVar, std::string depVar, int seed) {
+void IsingSystem::csvHeaders(std::string indVar, double depVar, int seed) {
 	//sets filename
 	std::string filename = getFileName(indVar, depVar, seed);
 	//creates file with filename
@@ -289,12 +291,12 @@ void IsingSystem::keepGoing() {
 	if (numSweeps == 0)
 	{
 		//create new file
-		csvHeaders("sweeps", "magnetisation", seed);
-		fileName = getFileName("sweeps", "magnetisation", seed);
+		csvHeaders("sweeps", inverseTemperatureBeta , seed);
+		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 	}
 	if (numSweeps <= endSweeps)
 	{
-		fileName = getFileName("sweeps", "magnetisation", seed);
+		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;

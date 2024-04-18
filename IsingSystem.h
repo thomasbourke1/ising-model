@@ -110,11 +110,11 @@ public:
 	// saves data to file (independant and dependant variables)
 	void printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, int seed);
 	//creates csv file
-	void csvHeaders(std::string indVar, std::string depVar, int seed);
+	void csvHeaders(std::string indVar, double depVar, int seed);
 	int fileCreated;
 
 	// get file name
-	std::string getFileName(std::string indVar, std::string depVar, int seed);
+	std::string getFileName(std::string indVar, double depVar, int seed);
 	std::string fileName;
 
 	// for when we want to automate system
