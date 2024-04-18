@@ -193,18 +193,20 @@ float IsingSystem::getMagnetisation() {
 // gets Energy by summing product of nearest neighbours for each particle
 float IsingSystem::getEnergy() {
 	float E = 0;
-	int neighbour[2], current[2];
+	//  int neighbour[2], current[2];
 	for (int i = 0; i < gridSize; i++) 
 	{
 		for (int j = 0; j < gridSize; j++)
 		{
-			current[0] = i;
-			current[j] = j;
+			// current[0] = i;
+			// current[1] = j;
+			int neighbour[2];
+			int pos[] = {i, j};
 			// iterate over 4 nearest neighbours -> PBCs taken care of
-			for (int k = 0; i < 4; k++)
+			for (int k = 0; k < 4; k++)
 			{
-				setPosNeighbour(neighbour, current, k);
-                E += grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+				setPosNeighbour(neighbour, pos, k);
+                E += grid[neighbour[0]][neighbour[1]] * grid[pos[0]][pos[1]];
 			}	
 		}
 	}
@@ -280,6 +282,7 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	if ((numSweeps % 1) == 0)
 	{
 		float M = getMagnetisation();
+		float E = getEnergy();
 		seed = getSeed();
 		printCsv(filename, numSweeps, inverseTemperatureBeta, M, seed);
 	}	
