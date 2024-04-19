@@ -20,7 +20,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
 
-	inverseTemperatureBeta = 1 / 4.0;
+	inverseTemperatureBeta = 0.7;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 10;
@@ -44,12 +44,12 @@ IsingSystem::IsingSystem(Window *set_win) {
 
 void IsingSystem::Reset() {
 
-	double initialTemp = 4.0;
+	// double initialTemp = inverseTemperatureBeta;
 	
 	//resets number of sweeps
 	numSweeps = 0;
 
-	setTemperature(initialTemp);
+	// setTemperature(initialTemp);
 
 	// set the grid to -1
 	for (int i = 0; i<gridSize; i++) {
