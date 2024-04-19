@@ -102,9 +102,10 @@ public:
 
 	// correlation function for exercise 5
 	float getCorrelation(int r);
+	float correlation;
 
 	// array to store G values
-	std::vector<float> correlations;
+	// std::vector<float> correlations;
 
 	// number of spins N in grid
 	int numSpins(int gridSize);

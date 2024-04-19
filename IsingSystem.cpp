@@ -20,7 +20,7 @@ IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
 
-	inverseTemperatureBeta = 0.7;
+	inverseTemperatureBeta = 0.1;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 10;
@@ -315,16 +315,20 @@ void IsingSystem::keepGoing() {
 		csvHeaders("sweeps", inverseTemperatureBeta , seed);
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 
+		correlation = 0;
+		// float *G_pointer = &correlation;
 		// create G array (correlation function)
-		std::vector<float> correlations;
+		// std::vector<float> correlations;
 
 	}
 	if (numSweeps <= endSweeps)
 	{
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
-		float G = getCorrelation(1);
-		correlations.push_back(1);
+		// float G = getCorrelation(1);
+		correlation += getCorrelation(10);
+		
+		// correlations.push_back(1);
 		MCsweep();
 		numSweeps++;
 	}
@@ -337,10 +341,12 @@ void IsingSystem::keepGoing() {
 	}
 	else {
 		pauseRunning();
-		cout << "correlations ="  << endl;
-		for (int i : correlations) {
-        std::cout << i << " ";
-    	}
+		cout << "beta temperature = " << inverseTemperatureBeta << endl;
+		cout << "correlation =" << (correlation / numSweeps) << endl;
+		correlation = 0;
+		// for (int i : correlations) {
+        // std::cout << i << " ";
+    	// }
 		cout << "End number of runs reached" << endl;
 	}	
 }
