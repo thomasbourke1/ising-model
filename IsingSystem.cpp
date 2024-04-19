@@ -205,8 +205,30 @@ float IsingSystem::getEnergy() {
             }
         }
     }
-    return (-E);
+    return (-E / (gridSize*gridSize));
 }
+
+// correlation function for exercise 5
+float IsingSystem::getCorrelation(int r) {
+	// creates array where positions are stored
+	int neighbour[2], current[2];
+	float correlation = 0;
+
+	// sets coordinates at 0,0
+	current[0] = 0;
+	current[1] = 0;
+
+	// finds neighbour in column r distance away
+	neighbour[0] = (current[0] + r) % gridSize;
+	neighbour[1] = 0;
+
+	// Calculate the product of the spins of the two sites
+	correlation = grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+
+	return correlation;        
+}
+
+
 
 // send back the position of a neighbour of a given grid cell
 // NOTE: we take care of periodic boundary conditions, also positions are integers now not doubles
@@ -293,6 +315,10 @@ void IsingSystem::keepGoing() {
 		//create new file
 		csvHeaders("sweeps", inverseTemperatureBeta , seed);
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
+
+		// create G array (correlation function)
+		std::vector<float> correlations;
+
 	}
 	if (numSweeps <= endSweeps)
 	{

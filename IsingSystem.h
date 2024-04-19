@@ -100,6 +100,11 @@ public:
 	// calculates energy of system
 	float getEnergy();
 
+	// correlation function for exercise 5
+	float getCorrelation(int r);
+
+	// array to store 
+
 	// number of spins N in grid
 	int numSpins(int gridSize);
 	int N;
