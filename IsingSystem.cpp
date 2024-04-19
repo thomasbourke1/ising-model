@@ -19,8 +19,7 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-
-	inverseTemperatureBeta = 0.1;
+	inverseTemperatureBeta = 0.2;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 10;
@@ -208,25 +207,31 @@ float IsingSystem::getEnergy() {
     return (-E / (gridSize*gridSize));
 }
 
-// correlation function for exercise 5
 float IsingSystem::getCorrelation(int r) {
-	// creates array where positions are stored
-	int neighbour[2], current[2];
-	float correlation = 0;
+    int neighbour[2], current[2];
+    float correlation = 0;
 
-	// sets coordinates at 0,0
-	current[0] = 0;
-	current[1] = 0;
+    // Iterate over each point on the grid
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            // Set current point
+            current[0] = i;
+            current[1] = j;
 
-	// finds neighbour in column r distance away
-	neighbour[0] = (current[0] + r) % gridSize;
-	neighbour[1] = 0;
+            // Find neighbour in column r distance away
+            neighbour[0] = (current[0] + r) % gridSize;
+            neighbour[1] = current[1];
 
-	// Calculate the product of the spins of the two sites
-	correlation = grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
-	return correlation;        
+            // Calculate the product of the spins of the two sites and add to the total correlation
+            correlation += grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+        }
+    }
+
+    // Normalize the correlation by the total number of points on the grid
+    correlation /= (gridSize * gridSize);
+
+    return correlation;
 }
-
 
 
 // send back the position of a neighbour of a given grid cell
