@@ -224,7 +224,6 @@ float IsingSystem::getCorrelation(int r) {
 
 	// Calculate the product of the spins of the two sites
 	correlation = grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
-
 	return correlation;        
 }
 
@@ -324,6 +323,8 @@ void IsingSystem::keepGoing() {
 	{
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
+		float G = getCorrelation(1);
+		correlations.push_back(1);
 		MCsweep();
 		numSweeps++;
 	}
@@ -336,6 +337,10 @@ void IsingSystem::keepGoing() {
 	}
 	else {
 		pauseRunning();
+		cout << "correlations ="  << endl;
+		for (int i : correlations) {
+        std::cout << i << " ";
+    	}
 		cout << "End number of runs reached" << endl;
 	}	
 }
