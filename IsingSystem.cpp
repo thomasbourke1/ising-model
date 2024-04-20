@@ -19,7 +19,7 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-	inverseTemperatureBeta = 0.7;
+	inverseTemperatureBeta = 1;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 50;
