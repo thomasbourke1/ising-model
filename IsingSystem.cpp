@@ -19,13 +19,13 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-	inverseTemperatureBeta = 0.2;
+	inverseTemperatureBeta = 0.7;
 	slowNotFast = 1;
 	isActive = 0;
-	endSweeps = 10;
+	endSweeps = 50;
 	seed = getSeed();
 	numRuns = 1;
-	endRuns = 10;
+	endRuns = 50;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
