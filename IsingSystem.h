@@ -115,7 +115,7 @@ public:
 	int numSweeps = 0;
 
 	// saves data to file (independant and dependant variables)
-	void printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, int seed);
+	void printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed);
 	//creates csv file
 	void csvHeaders(std::string indVar, double depVar, int seed);
 	int fileCreated;

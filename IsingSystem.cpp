@@ -279,19 +279,19 @@ void IsingSystem::csvHeaders(std::string indVar, double depVar, int seed) {
 	//creates file with filename
 	std::ofstream file(filename);
 	//labels columns of filename
-	file << indVar << "," << "beta" << "," << "magnetisation" << "," << "energy" << "," << "seed" << endl;
+	file << indVar << "," << "beta" << "," << "magnetisation" << "," << "energy" << "," << "G" << "," << "seed" << endl;
     // Close the file
     file.close();
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, int seed) {
+void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed) {
 	//open csv
 	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
-		logfile << indVar << "," << indVar2 << "," << depVar << "," << depVar2 << "," << seed << std::endl;
+		logfile << indVar << "," << indVar2 << "," << depVar << "," << depVar2 << "," << depVar3 << "," << seed << std::endl;
 		logfile.close();
 	}
 	else {
@@ -306,8 +306,10 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	{
 		float M = getMagnetisation();
 		float E = getEnergy();
+		int r = 1;
+		float G = getCorrelation(r);
 		seed = getSeed();
-		printCsv(filename, numSweeps, inverseTemperatureBeta, M, E, seed);
+		printCsv(filename, numSweeps, inverseTemperatureBeta, M, E, G, seed);
 	}	
 }
 
@@ -330,8 +332,9 @@ void IsingSystem::keepGoing() {
 	{
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
+
 		// float G = getCorrelation(1);
-		correlation += getCorrelation(10);
+		correlation += getCorrelation(3);
 		
 		// correlations.push_back(1);
 		MCsweep();
