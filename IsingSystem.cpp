@@ -321,22 +321,13 @@ void IsingSystem::keepGoing() {
 		//create new file
 		csvHeaders("sweeps", inverseTemperatureBeta , seed);
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
-
 		correlation = 0;
-		// float *G_pointer = &correlation;
-		// create G array (correlation function)
-		// std::vector<float> correlations;
 
 	}
 	if (numSweeps <= endSweeps)
 	{
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
-
-		// float G = getCorrelation(1);
-		correlation += getCorrelation(3);
-		
-		// correlations.push_back(1);
 		MCsweep();
 		numSweeps++;
 	}
@@ -349,12 +340,7 @@ void IsingSystem::keepGoing() {
 	}
 	else {
 		pauseRunning();
-		cout << "beta temperature = " << inverseTemperatureBeta << endl;
-		cout << "correlation =" << (correlation / numSweeps) << endl;
 		correlation = 0;
-		// for (int i : correlations) {
-        // std::cout << i << " ";
-    	// }
 		cout << "End number of runs reached" << endl;
 	}	
 }
