@@ -62,7 +62,7 @@ public:
 	void Hotter() { inverseTemperatureBeta -= 0.05; }
 	void Colder() { inverseTemperatureBeta += 0.05; }
 
-	void setTemperature(double TT) {}// inverseTemperatureBeta = 1.0 / TT; }
+	void setTemperature(double TT) { inverseTemperatureBeta = 1.0 / TT; }
 
 	// set and read grid entries associated with a given position
 	// NOTE! the grid is not accessed directly, only via these functions
@@ -95,9 +95,17 @@ public:
 	void DrawSquares();
 
 	// calculates magnetisation of system
-	double magnetisation();
-	double M;
-	int dM;
+	float getMagnetisation();
+
+	// calculates energy of system
+	float getEnergy();
+
+	// correlation function for exercise 5
+	float getCorrelation(int r);
+	float correlation;
+
+	// array to store G values
+	// std::vector<float> correlations;
 
 	// number of spins N in grid
 	int numSpins(int gridSize);
@@ -106,25 +114,21 @@ public:
 	void calcVars(std::string filename, int numSweeps);
 	int numSweeps = 0;
 
-	// get file name
-	std::string getFileName(std::string indVar, std::string depVar);
-	std::string fileName;
-
-	// creates csv file
-	void csvHeaders(std::string indVar, std::string depVar);
-
 	// saves data to file (independant and dependant variables)
-	void printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed);
-	
+	void printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed);
+	//creates csv file
+	void csvHeaders(std::string indVar, double depVar, int seed);
+	int fileCreated;
+
+	// get file name
+	std::string getFileName(std::string indVar, double depVar, int seed);
+	std::string fileName;
 
 	// for when we want to automate system
 	void keepGoing();
 	int endSweeps;
 	int numRuns;
 	int endRuns;
-	int endBeta;
-
-	double finalTemp;
 
 	
 	int getSeed();

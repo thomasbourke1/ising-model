@@ -5,7 +5,6 @@
 #include "IsingSystem.h"
 #include <fstream>
 #include <string>
-#include <cmath>
 
 // colors
 namespace colours {
@@ -20,19 +19,13 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-
-	inverseTemperatureBeta = 0.2;
+	inverseTemperatureBeta = 1;
 	slowNotFast = 1;
 	isActive = 0;
-	endSweeps = 20;
+	endSweeps = 50;
 	seed = getSeed();
 	numRuns = 1;
-	endRuns = 10;
-	int endBeta = 6;
-
-	finalTemp = 0.7;
-
-	cout << "endBeta = " << endBeta << endl;
+	endRuns = 50;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -50,12 +43,12 @@ IsingSystem::IsingSystem(Window *set_win) {
 
 void IsingSystem::Reset() {
 
-	double initialTemp = 0.2;
+	// double initialTemp = inverseTemperatureBeta;
 	
 	//resets number of sweeps
 	numSweeps = 0;
 
-	setTemperature(initialTemp);
+	// setTemperature(initialTemp);
 
 	// set the grid to -1
 	for (int i = 0; i<gridSize; i++) {
@@ -184,26 +177,62 @@ int IsingSystem::numSpins(int gridSize) {
 }
 
 // calculates magnetisation of whole grid
-double IsingSystem::magnetisation() {
-	// reset M
-	M = 0;
-	N = numSpins(gridSize);
-	// need to sum over rows and columns
+float IsingSystem::getMagnetisation() {
+	float M = 0;
 	for (int i = 0; i < gridSize; i++)
 	{
 		for (int j = 0; j < gridSize; j++)
 		{
-			// position is (i,j)
-			int pos[2] = { i,j };
-			//divide by N = gridsize**2
-			dM = (readGrid(pos));
-			M += dM;
-		}	
+			M += grid[i][j];
+		}
 	}
-	// divide by N spins
-	M = M / N;
-	return M;
+	return (M / (gridSize*gridSize));
 }
+
+// gets Energy by summing product of nearest neighbours for each particle
+float IsingSystem::getEnergy() {
+    float E = 0;
+    int neighbour[2], current[2];
+
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            current[0] = i;
+            current[1] = j;
+            for (int k = 0; k < 4; k++) {
+                setPosNeighbour(neighbour, current, k);
+                E += grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+            }
+        }
+    }
+    return (-E / (gridSize*gridSize));
+}
+
+float IsingSystem::getCorrelation(int r) {
+    int neighbour[2], current[2];
+    float correlation = 0;
+
+    // Iterate over each point on the grid
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            // Set current point
+            current[0] = i;
+            current[1] = j;
+
+            // Find neighbour in column r distance away
+            neighbour[0] = (current[0] + r) % gridSize;
+            neighbour[1] = current[1];
+
+            // Calculate the product of the spins of the two sites and add to the total correlation
+            correlation += grid[current[0]][current[1]] * grid[neighbour[0]][neighbour[1]];
+        }
+    }
+
+    // Normalize the correlation by the total number of points on the grid
+    correlation /= (gridSize * gridSize);
+
+    return correlation;
+}
+
 
 // send back the position of a neighbour of a given grid cell
 // NOTE: we take care of periodic boundary conditions, also positions are integers now not doubles
@@ -233,34 +262,36 @@ int IsingSystem::getSeed() {
 }
 
 // gets file name of csv file
-std::string IsingSystem::getFileName(std::string indVar, std::string depVar) {
+std::string IsingSystem::getFileName(std::string indVar, double depVar, int seed) {
 	// sets seed to string data type	
 	std::string seedAsString = std::to_string(seed);
+	std::string betaAsString = std::to_string(depVar);
+
 	//creates filename based on inputs
-	std::string filename = "analysis/task1_data/file_" + depVar + ".csv";
+	std::string filename = "data/file_" + betaAsString + "_" + seedAsString + ".csv";
 	return filename;
 }
 
 // creates csv file with dependant variable and seed as name
-void IsingSystem::csvHeaders(std::string indVar, std::string depVar) {
+void IsingSystem::csvHeaders(std::string indVar, double depVar, int seed) {
 	//sets filename
-	std::string filename = getFileName(indVar, depVar);
+	std::string filename = getFileName(indVar, depVar, seed);
 	//creates file with filename
 	std::ofstream file(filename);
 	//labels columns of filename
-	file << indVar << "," << "beta" << "," << depVar << "," << "seed" << endl;
+	file << indVar << "," << "beta" << "," << "magnetisation" << "," << "energy" << "," << "G" << "," << "seed" << endl;
     // Close the file
     file.close();
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, double depVar, int seed) {
+void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed) {
 	//open csv
 	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
-		logfile << indVar << "," << indVar2 << "," << depVar << "," << seed << std::endl;
+		logfile << indVar << "," << indVar2 << "," << depVar << "," << depVar2 << "," << depVar3 << "," << seed << std::endl;
 		logfile.close();
 	}
 	else {
@@ -269,58 +300,47 @@ void IsingSystem::printCsv(std::string filename, double indVar, double indVar2, 
 	}
 }
 
-// opens filename, calls printCsv to append numSweeps, beta, mag, seed
 void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	//calculate magnetisation and energy after 10 sweeps
 	if ((numSweeps % 1) == 0)
 	{
-		M = magnetisation();
+		float M = getMagnetisation();
+		float E = getEnergy();
+		int r = 1;
+		float G = getCorrelation(r);
 		seed = getSeed();
-		printCsv(filename, numSweeps, inverseTemperatureBeta, M, getSeed());
+		printCsv(filename, numSweeps, inverseTemperatureBeta, M, E, G, seed);
 	}	
 }
 
 // ends automation if endRuns is reached
 void IsingSystem::keepGoing() {
-	// create file if numRuns = 1 [starts from 1]
-	if (numRuns == 1 && numSweeps == 0)
+	
+	if (numSweeps == 0)
 	{
-		cout << "File created" << endl;
-		csvHeaders("sweeps", "magnetisation");
-		fileName = getFileName("sweeps", "magnetisation");
+		//create new file
+		csvHeaders("sweeps", inverseTemperatureBeta , seed);
+		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
+		correlation = 0;
 
-	//	cout << "debugging started" << endl;
-	//	cout << "numRuns = " << numRuns << endl;
-	//	cout << "numSweeps = " << numSweeps << endl;
-	//	cout << "inverseTemperatureBeta = " << inverseTemperatureBeta << " endBeta = " << endBeta << endl;
-
-	//	cout << "" << endl;
-	//	cout << "finalTemp = " << finalTemp << endl;
 	}
-	// adds values to file if endSweeps not yet reached
 	if (numSweeps <= endSweeps)
 	{
-		cout << "added to file" << endl;
+		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
 		MCsweep();
 		numSweeps++;
-
-	//	cout << "endBeta = " << endBeta << endl;
 	}
-	if (numRuns <= endRuns && inverseTemperatureBeta <= finalTemp) //&& numSweeps == endSweeps) //inverseTemperatureBeta <= endBeta)
+	else if (numRuns < endRuns)
 	{
-		//increment seed, numRuns counter, reset simulation
-		cout << "incremented seed, numRuns" << endl;
+		//increment seed, numRuns counter 
 		seed++;
 		numRuns++;
 		Reset();
-		if (numSweeps == endSweeps)
-		{
-			inverseTemperatureBeta += 0.1;
-		}
 	}
 	else {
 		pauseRunning();
+		correlation = 0;
 		cout << "End number of runs reached" << endl;
 	}	
 }
