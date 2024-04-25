@@ -19,13 +19,14 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-	inverseTemperatureBeta = 2;
+	inverseTemperatureBeta = 0.8;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 50;
 	seed = getSeed();
 	numRuns = 1;
-	endRuns = 50;
+	endRuns = 20;
+	r_correlation = 1;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -267,8 +268,11 @@ std::string IsingSystem::getFileName(std::string indVar, double depVar, int seed
 	std::string seedAsString = std::to_string(seed);
 	std::string betaAsString = std::to_string(depVar);
 
+	// r_correlation as string
+	std::string rAsString = std::to_string(r_correlation);
+
 	//creates filename based on inputs
-	std::string filename = "data/file_" + betaAsString + "_" + seedAsString + ".csv";
+	std::string filename = "task5_data/file_" + betaAsString + "_" + rAsString + ".csv";
 	return filename;
 }
 
@@ -279,19 +283,19 @@ void IsingSystem::csvHeaders(std::string indVar, double depVar, int seed) {
 	//creates file with filename
 	std::ofstream file(filename);
 	//labels columns of filename
-	file << indVar << "," << "beta" << "," << "magnetisation" << "," << "energy" << "," << "G" << "," << "seed" << endl;
+	file << indVar << "," << "beta" << "," << "magnetisation" << "," << "energy" << "," << "G" << "," << "seed" << ","<< "r_correlation" << endl;
     // Close the file
     file.close();
 }
 
 // prints data to csv file
-void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed) {
+void IsingSystem::printCsv(std::string filename, float indVar, double indVar2, float depVar, float depVar2, float depVar3, int seed, int r) {
 	//open csv
 	std::ofstream logfile(filename, std::ios_base::app);
 	//print data to file
 	if (logfile.is_open()) {
 		//write to file
-		logfile << indVar << "," << indVar2 << "," << depVar << "," << depVar2 << "," << depVar3 << "," << seed << std::endl;
+		logfile << indVar << "," << indVar2 << "," << depVar << "," << depVar2 << "," << depVar3 << "," << seed << ","<< r << std::endl;
 		logfile.close();
 	}
 	else {
@@ -306,10 +310,9 @@ void IsingSystem::calcVars(std::string filename, int numSweeps) {
 	{
 		float M = getMagnetisation();
 		float E = getEnergy();
-		int r = 1;
-		float G = getCorrelation(r);
+		float G = getCorrelation(r_correlation);
 		seed = getSeed();
-		printCsv(filename, numSweeps, inverseTemperatureBeta, M, E, G, seed);
+		printCsv(filename, numSweeps, inverseTemperatureBeta, M, E, G, seed, r_correlation);
 	}	
 }
 
@@ -334,7 +337,8 @@ void IsingSystem::keepGoing() {
 	else if (numRuns < endRuns)
 	{
 		//increment seed, numRuns counter 
-		seed++;
+		// seed++;
+		r_correlation+=1;
 		numRuns++;
 		Reset();
 	}
