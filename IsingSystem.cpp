@@ -19,7 +19,7 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-	inverseTemperatureBeta = 0.8;
+	inverseTemperatureBeta = 0.2;
 	slowNotFast = 1;
 	isActive = 0;
 	endSweeps = 50;
@@ -272,7 +272,7 @@ std::string IsingSystem::getFileName(std::string indVar, double depVar, int seed
 	std::string rAsString = std::to_string(r_correlation);
 
 	//creates filename based on inputs
-	std::string filename = "task5_data/file_" + betaAsString + "_" + rAsString + ".csv";
+	std::string filename = "task5_2_data/file_" + betaAsString + "_" + rAsString + ".csv";
 	return filename;
 }
 
@@ -325,10 +325,15 @@ void IsingSystem::keepGoing() {
 		csvHeaders("sweeps", inverseTemperatureBeta , seed);
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		correlation = 0;
+		r_correlation = 0;
 
 	}
 	if (numSweeps <= endSweeps)
 	{
+		if (numSweeps > 10)
+		{
+			r_correlation++;
+		}
 		fileName = getFileName("sweeps", inverseTemperatureBeta, seed);
 		calcVars(fileName, numSweeps);
 		MCsweep();
@@ -338,7 +343,8 @@ void IsingSystem::keepGoing() {
 	{
 		//increment seed, numRuns counter 
 		// seed++;
-		r_correlation+=1;
+		
+		
 		numRuns++;
 		Reset();
 	}
