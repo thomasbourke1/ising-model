@@ -19,13 +19,13 @@ namespace colours {
 IsingSystem::IsingSystem(Window *set_win) {
 	cout << "creating system, gridSize " << gridSize << endl;
 	win = set_win;
-	inverseTemperatureBeta = 0.7;
+	inverseTemperatureBeta = 0.4;
 	slowNotFast = 1;
 	isActive = 0;
-	endSweeps = 50;
+	endSweeps = 1000;
 	seed = getSeed();
 	numRuns = 1;
-	endRuns = 50;
+	endRuns = 1;
 
 	// Allocate memory for the grid, remember to free the memory in destructor
 	//   the point here is that each row of the grid is an array
@@ -268,7 +268,7 @@ std::string IsingSystem::getFileName(std::string indVar, double depVar, int seed
 	std::string betaAsString = std::to_string(depVar);
 
 	//creates filename based on inputs
-	std::string filename = "data/file_" + betaAsString + "_" + seedAsString + ".csv";
+	std::string filename = "file_" + betaAsString + "_" + seedAsString + ".csv";
 	return filename;
 }
 
